@@ -11,7 +11,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -39,15 +38,17 @@ public class SnakeApplication extends Application {
 		
 		Rectangle food = new Rectangle(Constants.BLOCK_SIZE, Constants.BLOCK_SIZE);
 		food.setFill(Color.BLUE);
-		food.setTranslateX((int)(Math.random() * (Constants.HEIGHT - Constants.BLOCK_SIZE)) / Constants.BLOCK_SIZE * Constants.BLOCK_SIZE);
+		food.setTranslateX((int)(Math.random() * (Constants.WIDTH - Constants.BLOCK_SIZE)) / Constants.BLOCK_SIZE * Constants.BLOCK_SIZE);
 		food.setTranslateY((int)(Math.random() * (Constants.HEIGHT - Constants.BLOCK_SIZE)) / Constants.BLOCK_SIZE * Constants.BLOCK_SIZE);
 		
-		KeyFrame frame = new KeyFrame(Duration.seconds(0.1), event -> {
+		KeyFrame frame = new KeyFrame(Duration.seconds(0.3), event -> {
 			if (!isApplicationRunning) {
 				return;
 			}
 			
-			Node tail = (snake.size() > 1) ? snake.remove(snake.size() - 1) : snake.get(0);
+			boolean toRemove = snake.size() > 1;
+			
+			Node tail = toRemove ? snake.remove(snake.size() - 1) : snake.get(0);
 			
 			double tailX = tail.getTranslateX();
 			double tailY = tail.getTranslateY();
@@ -69,13 +70,11 @@ public class SnakeApplication extends Application {
 				tail.setTranslateX(snake.get(0).getTranslateX() + Constants.BLOCK_SIZE);
 				tail.setTranslateY(snake.get(0).getTranslateY());
 				break;
-			default:
-				break;
 			}
 			
 			isMoved = true;
 			
-			if (snake.size() > 1) {
+			if (toRemove) {
 				snake.add(0, tail);
 			}
 			
@@ -95,7 +94,7 @@ public class SnakeApplication extends Application {
 			}
 			
 			if (tail.getTranslateX() == food.getTranslateX() && tail.getTranslateY() == food.getTranslateY()) {
-				food.setTranslateX((int)(Math.random() * (Constants.HEIGHT - Constants.BLOCK_SIZE)) / Constants.BLOCK_SIZE * Constants.BLOCK_SIZE);
+				food.setTranslateX((int)(Math.random() * (Constants.WIDTH - Constants.BLOCK_SIZE)) / Constants.BLOCK_SIZE * Constants.BLOCK_SIZE);
 				food.setTranslateY((int)(Math.random() * (Constants.HEIGHT - Constants.BLOCK_SIZE)) / Constants.BLOCK_SIZE * Constants.BLOCK_SIZE);
 				
 				Rectangle rectangle = new Rectangle(Constants.BLOCK_SIZE, Constants.BLOCK_SIZE);
@@ -115,8 +114,22 @@ public class SnakeApplication extends Application {
 	}
 	
 	private void restartGame() {
-		// TODO Auto-generated method stub
-		
+		stopGame();
+		startGame();
+	}
+
+	private void startGame() {
+		direction = Direction.RIGHT;
+		Rectangle head = new Rectangle(Constants.BLOCK_SIZE, Constants.BLOCK_SIZE);
+		snake.add(head);
+		animation.play();
+		isApplicationRunning = true;
+	}
+
+	private void stopGame() {
+		isApplicationRunning = false;
+		animation.stop();
+		snake.clear();
 	}
 
 	@Override
@@ -125,9 +138,43 @@ public class SnakeApplication extends Application {
 //			BorderPane root = new BorderPane();
 			Scene scene = new Scene(createContent());
 //			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			scene.setOnKeyPressed(event -> {
+				if (! isMoved) {
+					return;
+				}
+				
+				switch (event.getCode()) {
+				case UP:
+					if (direction != Direction.DOWN) {
+						direction = Direction.UP;
+					}
+					break;
+				case DOWN:
+					if (direction != Direction.UP) {
+						direction = Direction.DOWN;
+					}
+					break;
+				case LEFT:
+					if (direction != Direction.RIGHT) {
+						direction = Direction.LEFT;
+					}
+					break;
+				case RIGHT:
+					if (direction != Direction.LEFT) {
+						direction = Direction.RIGHT;
+					}
+					break;
+				}
+				
+				isMoved = false;
+			});
+			
 			primaryStage.setTitle("Snake");
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			
+			startGame();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
