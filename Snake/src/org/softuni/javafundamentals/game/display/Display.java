@@ -1,6 +1,6 @@
 package org.softuni.javafundamentals.game.display;
 
-import org.softuni.javafundamentals.game.snake.SnakeLauncher;
+import org.softuni.javafundamentals.game.snake.SnakeApplication;
 import org.softuni.javafundamentals.game.utils.GameUtils;
 
 import javafx.animation.KeyFrame;
@@ -13,20 +13,40 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+/**
+ * Defines the display of the game.
+ *
+ */
 public class Display {
 	
-	private SnakeLauncher snakeInstance;
+	private SnakeApplication application;
 	
-	public Display(SnakeLauncher snakeInstance) {
-		this.snakeInstance = snakeInstance;
+	public Display(SnakeApplication application) {
+		this.application = application;
 	}
 	
+	/**
+	 * Creates the layout.
+	 * 
+	 * @return {@link Parent} object
+	 */
 	public Parent createContent() {
 		Pane root = new Pane();
 		root.setPrefSize(GameUtils.WIDTH, GameUtils.HEIGHT);
 		
+		addElements(root);
+		
+		return root;
+	}
+
+	/**
+	 * Add elements to the layout.
+	 * 
+	 * @param root
+	 */
+	private void addElements(Pane root) {
 		Group snakeBody = new Group();
-		snakeInstance.setSnake(snakeBody.getChildren());
+		application.getGame().setSnake(snakeBody.getChildren());
 		
 		Rectangle food = new Rectangle(GameUtils.BLOCK_SIZE, GameUtils.BLOCK_SIZE);
 		food.setFill(Color.BLUE);
@@ -34,74 +54,119 @@ public class Display {
 		food.setTranslateY((int)(Math.random() * (GameUtils.HEIGHT - GameUtils.BLOCK_SIZE)) / GameUtils.BLOCK_SIZE * GameUtils.BLOCK_SIZE);
 		
 		KeyFrame frame = new KeyFrame(Duration.seconds(0.3), event -> {
-			if (!snakeInstance.isApplicationRunning()) {
+			if (!application.getGame().isApplicationRunning()) {
 				return;
 			}
 			
-			boolean toRemove = snakeInstance.getSnake().size() > 1;
+			boolean toRemove = application.getGame().getSnake().size() > 1;
 			
-			Node tail = toRemove ? snakeInstance.getSnake().remove(snakeInstance.getSnake().size() - 1) : snakeInstance.getSnake().get(0);
+			Node tail = toRemove ? 
+					application.getGame().getSnake().remove(application.getGame().getSnake().size() - 1) : 
+						application.getGame().getSnake().get(0);
 			
 			double tailX = tail.getTranslateX();
 			double tailY = tail.getTranslateY();
 			
-			switch (snakeInstance.getDirection()) {
+			switch (application.getGame().getDirection()) {
 			case UP:
-				tail.setTranslateX(snakeInstance.getSnake().get(0).getTranslateX());
-				tail.setTranslateY(snakeInstance.getSnake().get(0).getTranslateY() - GameUtils.BLOCK_SIZE);
+				tail.setTranslateX(application.getGame().getSnake().get(0).getTranslateX());
+				tail.setTranslateY(application.getGame().getSnake().get(0).getTranslateY() - GameUtils.BLOCK_SIZE);
 				break;
 			case DOWN:
-				tail.setTranslateX(snakeInstance.getSnake().get(0).getTranslateX());
-				tail.setTranslateY(snakeInstance.getSnake().get(0).getTranslateY() + GameUtils.BLOCK_SIZE);
+				tail.setTranslateX(application.getGame().getSnake().get(0).getTranslateX());
+				tail.setTranslateY(application.getGame().getSnake().get(0).getTranslateY() + GameUtils.BLOCK_SIZE);
 				break;
 			case LEFT:
-				tail.setTranslateX(snakeInstance.getSnake().get(0).getTranslateX() - GameUtils.BLOCK_SIZE);
-				tail.setTranslateY(snakeInstance.getSnake().get(0).getTranslateY());
+				tail.setTranslateX(application.getGame().getSnake().get(0).getTranslateX() - GameUtils.BLOCK_SIZE);
+				tail.setTranslateY(application.getGame().getSnake().get(0).getTranslateY());
 				break;
 			case RIGHT:
-				tail.setTranslateX(snakeInstance.getSnake().get(0).getTranslateX() + GameUtils.BLOCK_SIZE);
-				tail.setTranslateY(snakeInstance.getSnake().get(0).getTranslateY());
+				tail.setTranslateX(application.getGame().getSnake().get(0).getTranslateX() + GameUtils.BLOCK_SIZE);
+				tail.setTranslateY(application.getGame().getSnake().get(0).getTranslateY());
 				break;
 			}
 			
-			snakeInstance.setMoved(true);
+			application.getGame().setMoved(true);
 			
 			if (toRemove) {
-				snakeInstance.getSnake().add(0, tail);
+				application.getGame().getSnake().add(0, tail);
 			}
 			
 			//collision detection
-			for (Node node : snakeInstance.getSnake()) {
-				if (node != tail && tail.getTranslateX() == node.getTranslateX() &&
-						tail.getTranslateY() == node.getTranslateY()) {
-					//the snake hits its own body
-					snakeInstance.restartGame();
-					break;
-				}
-			}
-			
-			if (tail.getTranslateX() < 0 || tail.getTranslateX() >= GameUtils.WIDTH ||
-					tail.getTranslateY() < 0 || tail.getTranslateY() >= GameUtils.HEIGHT) {
-				snakeInstance.restartGame();
-			}
-			
-			if (tail.getTranslateX() == food.getTranslateX() && tail.getTranslateY() == food.getTranslateY()) {
-				food.setTranslateX((int)(Math.random() * (GameUtils.WIDTH - GameUtils.BLOCK_SIZE)) / GameUtils.BLOCK_SIZE * GameUtils.BLOCK_SIZE);
-				food.setTranslateY((int)(Math.random() * (GameUtils.HEIGHT - GameUtils.BLOCK_SIZE)) / GameUtils.BLOCK_SIZE * GameUtils.BLOCK_SIZE);
-				
-				Rectangle rectangle = new Rectangle(GameUtils.BLOCK_SIZE, GameUtils.BLOCK_SIZE);
-				rectangle.setTranslateX(tailX);
-				rectangle.setTranslateY(tailY);
-				
-				snakeInstance.getSnake().add(rectangle);
-			}
+			detectCollision(food, tail, tailX, tailY);
 		});
 		
-		snakeInstance.getAnimation().getKeyFrames().add(frame);
-		snakeInstance.getAnimation().setCycleCount(Timeline.INDEFINITE);
+		application.getGame().getAnimation().getKeyFrames().add(frame);
+		application.getGame().getAnimation().setCycleCount(Timeline.INDEFINITE);
 		
 		root.getChildren().addAll(food, snakeBody);
-		
-		return root;
+	}
+
+	/**
+	 * Detects collision:
+	 * <ul>
+	 * <li>the snake hits its body</li>
+	 * <li>the snake hits the border area</li>
+	 * <li>the snake eats the food</li>
+	 * </ul>
+	 * 
+	 * @param food
+	 * @param tail
+	 * @param tailX
+	 * @param tailY
+	 */
+	private void detectCollision(Rectangle food, Node tail, double tailX, double tailY) {
+		checkIfSnakeHitsItsBody(tail);
+		checkIfSnakeHitsBorderArea(tail);
+		checkIfSnakeEatsTheFood(food, tail, tailX, tailY);
+	}
+
+	/**
+	 * Checks if the snake hits its body.
+	 * 
+	 * @param tail
+	 */
+	private void checkIfSnakeHitsItsBody(Node tail) {
+		for (Node node : application.getGame().getSnake()) {
+			if (node != tail && tail.getTranslateX() == node.getTranslateX() &&
+					tail.getTranslateY() == node.getTranslateY()) {
+				//the snake hits its own body
+				application.restartGame(application.getGame());
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Checks if the snake hits the border area.
+	 * 
+	 * @param tail
+	 */
+	private void checkIfSnakeHitsBorderArea(Node tail) {
+		if (tail.getTranslateX() < 0 || tail.getTranslateX() >= GameUtils.WIDTH ||
+				tail.getTranslateY() < 0 || tail.getTranslateY() >= GameUtils.HEIGHT) {
+			application.restartGame(application.getGame());
+		}
+	}
+
+	/**
+	 * Checks if the snake eats the food.
+	 * 
+	 * @param food
+	 * @param tail
+	 * @param tailX
+	 * @param tailY
+	 */
+	private void checkIfSnakeEatsTheFood(Rectangle food, Node tail, double tailX, double tailY) {
+		if (tail.getTranslateX() == food.getTranslateX() && tail.getTranslateY() == food.getTranslateY()) {
+			food.setTranslateX((int)(Math.random() * (GameUtils.WIDTH - GameUtils.BLOCK_SIZE)) / GameUtils.BLOCK_SIZE * GameUtils.BLOCK_SIZE);
+			food.setTranslateY((int)(Math.random() * (GameUtils.HEIGHT - GameUtils.BLOCK_SIZE)) / GameUtils.BLOCK_SIZE * GameUtils.BLOCK_SIZE);
+			
+			Rectangle rectangle = new Rectangle(GameUtils.BLOCK_SIZE, GameUtils.BLOCK_SIZE);
+			rectangle.setTranslateX(tailX);
+			rectangle.setTranslateY(tailY);
+			
+			application.getGame().getSnake().add(rectangle);
+		}
 	}
 }
