@@ -50,7 +50,7 @@ public class Display {
 		application.getGame().setSnake(snakeBody.getChildren());
 		
 		Rectangle food = new Rectangle(GameUtils.BLOCK_SIZE, GameUtils.BLOCK_SIZE);
-		food.setFill(new ImagePattern(new Image(this.getClass().getResource("../resources/apple.png").toExternalForm())));
+		food.setFill(new ImagePattern(new Image(this.getClass().getResource("../resources/question_coin.png").toExternalForm())));
 		food.setTranslateX((int)(Math.random() * (GameUtils.WIDTH - GameUtils.BLOCK_SIZE)) / GameUtils.BLOCK_SIZE * GameUtils.BLOCK_SIZE);
 		food.setTranslateY((int)(Math.random() * (GameUtils.HEIGHT - GameUtils.BLOCK_SIZE)) / GameUtils.BLOCK_SIZE * GameUtils.BLOCK_SIZE);
 		
