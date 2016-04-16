@@ -1,8 +1,5 @@
 package org.softuni.javafundamentals.game.display;
 
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import org.softuni.javafundamentals.game.snake.Game;
 import org.softuni.javafundamentals.game.snake.SnakeApplication;
 import org.softuni.javafundamentals.game.utils.GameUtils;
 
@@ -27,7 +24,6 @@ public class Display {
 	public Display(SnakeApplication application) {
 		this.application = application;
 	}
-
 
 	/**
 	 * Creates the layout.

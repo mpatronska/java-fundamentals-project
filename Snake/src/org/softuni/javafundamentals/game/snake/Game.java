@@ -20,9 +20,13 @@ public class Game {
      */
     private boolean isMoved;
     /**
-     * Shows if the application is running. Default values is FALSE.
+     * Shows if the application is running. Default value is FALSE.
      */
     private boolean isApplicationRunning;
+    /**
+     * Shows if the game is paused. Default value is FALSE.
+     */
+    private boolean isGamePaused;
     /**
      * <{@link Timeline}> object.
      */
@@ -32,17 +36,15 @@ public class Game {
      */
     private ObservableList<Node> snake;
 
-    /**
+	/**
      * Default constructor. Sets default values.
      */
-    private boolean gamePaused;
-
     public Game() {
         this.direction = Direction.RIGHT;
         this.isMoved = false;
         this.isApplicationRunning = false;
         this.animation = new Timeline();
-        this.gamePaused = false;
+        this.isGamePaused = false;
     }
 
     public Direction getDirection() {
@@ -85,18 +87,18 @@ public class Game {
         return snake;
     }
 
-    public boolean gamePaused() {
-        return gamePaused;
+    public boolean isGamePaused() {
+    	return isGamePaused;
     }
 
     public void pauseGame() {
-        gamePaused = true;
+        isGamePaused = true;
         this.animation.pause();
     }
 
     public void resumeGame() {
-        gamePaused = false;
+        isGamePaused = false;
         this.animation.play();
     }
-
+    
 }

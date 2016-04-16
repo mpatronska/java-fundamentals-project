@@ -1,29 +1,15 @@
 package org.softuni.javafundamentals.game.snake;
 
-import javafx.application.Platform;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import org.softuni.javafundamentals.game.display.Display;
 import org.softuni.javafundamentals.game.utils.GameUtils;
 import org.softuni.javafundamentals.game.utils.GameUtils.Direction;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.event.EventHandler;
-
-import java.io.FileNotFoundException;
-
-import static javafx.scene.input.KeyCode.ESCAPE;
-import static javafx.scene.input.KeyCode.P;
-import static javafx.scene.input.KeyCode.getKeyCode;
 
 /**
  * Snake Application - entry point
@@ -52,15 +38,10 @@ public class SnakeApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
         try {
 
-            //StackPane root = new StackPane();
-            //root.setId("pane");
-            Parent display = new Display(this).createContent();
-            display.setId("pane");
-            //Scene scene = new Scene(new Display(this).createContent());
-            Scene scene = new Scene(display);
+            Parent root = new Display(this).createContent();
+            root.setId("pane");
+            Scene scene = new Scene(root);
 
-
-            //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
             scene.getStylesheets().addAll(this.getClass().getResource("../resources/style.css").toExternalForm());
             //String imageBG = "../resources/snake.png";
             //BackgroundImage newIMG = new BackgroundImage();
@@ -68,7 +49,6 @@ public class SnakeApplication extends Application {
             handleKeyEvent(game, scene);
 
             primaryStage.setTitle("Snake");
-
 
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -88,6 +68,9 @@ public class SnakeApplication extends Application {
      * <li>DOWN</li>
      * <li>LEFT</li>
      * <li>RIGHT</li>
+     * <li>P</li>
+     * <li>S</li>
+     * <li>ESC</li>
      * </ul>
      *
      * @param game  {@link Game} object
@@ -97,7 +80,7 @@ public class SnakeApplication extends Application {
         scene.setOnKeyPressed(event -> {
 
             // check if gamestate is paused - resuming game by press any key
-            if (game.gamePaused()) {
+            if (game.isGamePaused()) {
                 System.out.println("Game resumed");
                 game.resumeGame();
             }
@@ -105,7 +88,6 @@ public class SnakeApplication extends Application {
             if (!game.isMoved()) {
                 return;
             }
-
 
             switch (event.getCode()) {
                 case UP:
@@ -135,7 +117,7 @@ public class SnakeApplication extends Application {
                     handleKeyEvent(game, scene);
                     break;
 
-                //stop game - if pressek key 'S' or ESCAPE
+                //stop game - if pressed key 'S' or ESCAPE
                 case S:
                 case ESCAPE:
                     /*Label label1 = new Label("Name:");
@@ -144,7 +126,7 @@ public class SnakeApplication extends Application {
                     hb.getChildren().addAll(label1, textField);
                     hb.setSpacing(10);*/
 
-                    gameEnd(game);
+                    endGame(game);
                     break;
             }
 
@@ -186,21 +168,30 @@ public class SnakeApplication extends Application {
         game.getSnake().clear();
     }
 
-    private void gameEnd(Game game) {
+    /**
+     * Ends the game.
+     * 
+     * @param game
+     */
+    private void endGame(Game game) {
         game.setApplicationRunning(false);
         // TODO exiting label!
         Platform.exit();
         System.exit(0);
     }
 
+    /**
+     * Pauses the game.
+     * 
+     * @param game
+     */
     private void pauseGame(Game game) {
-        if (!game.gamePaused()) {
+        if (!game.isGamePaused()) {
             game.pauseGame();
             // text on screen to pause needed - TODO
             System.out.println("Game paused");
         }
     }
-
 
     public Game getGame() {
         return game;
