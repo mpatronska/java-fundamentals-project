@@ -8,8 +8,9 @@ import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
@@ -49,7 +50,7 @@ public class Display {
 		application.getGame().setSnake(snakeBody.getChildren());
 		
 		Rectangle food = new Rectangle(GameUtils.BLOCK_SIZE, GameUtils.BLOCK_SIZE);
-		food.setFill(Color.BLUE);
+		food.setFill(new ImagePattern(new Image(this.getClass().getResource("../resources/apple.png").toExternalForm())));
 		food.setTranslateX((int)(Math.random() * (GameUtils.WIDTH - GameUtils.BLOCK_SIZE)) / GameUtils.BLOCK_SIZE * GameUtils.BLOCK_SIZE);
 		food.setTranslateY((int)(Math.random() * (GameUtils.HEIGHT - GameUtils.BLOCK_SIZE)) / GameUtils.BLOCK_SIZE * GameUtils.BLOCK_SIZE);
 		

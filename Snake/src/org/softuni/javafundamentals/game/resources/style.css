@@ -1,7 +1,7 @@
 #pane{
     -fx-background-image: url(snake.png);
     -fx-background-repeat: stretch;
-    -fx-background-color: rgba(0, 250, 50, 0.8);
+    -fx-background-color: rgba(100, 180, 50, 0.8);
     -fx-background-size: auto;
     -fx-background-position: center center;
 }
