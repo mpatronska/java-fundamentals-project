@@ -8,6 +8,8 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -152,6 +154,7 @@ public class SnakeApplication extends Application {
     private void startGame(Game game) {
         game.setDirection(Direction.RIGHT);
         Rectangle head = new Rectangle(GameUtils.BLOCK_SIZE, GameUtils.BLOCK_SIZE);
+        head.setFill(new ImagePattern(new Image(this.getClass().getResource("../resources/snake_head.png").toExternalForm())));
         game.getSnake().add(head);
         game.getAnimation().play();
         game.setApplicationRunning(true);

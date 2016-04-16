@@ -164,6 +164,7 @@ public class Display {
 			food.setTranslateY((int)(Math.random() * (GameUtils.HEIGHT - GameUtils.BLOCK_SIZE)) / GameUtils.BLOCK_SIZE * GameUtils.BLOCK_SIZE);
 			
 			Rectangle rectangle = new Rectangle(GameUtils.BLOCK_SIZE, GameUtils.BLOCK_SIZE);
+			rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("../resources/snake_block.png").toExternalForm())));
 			rectangle.setTranslateX(tailX);
 			rectangle.setTranslateY(tailY);
 			
