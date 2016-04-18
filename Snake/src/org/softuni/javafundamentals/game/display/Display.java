@@ -31,7 +31,7 @@ public class Display {
 	 * 
 	 * @return {@link Parent} object
 	 */
-	public Parent createContent() {
+	public Pane createContent() {
 		Pane root = new Pane();
 		root.setPrefSize(GameUtils.WIDTH, GameUtils.HEIGHT);
 
@@ -100,7 +100,7 @@ public class Display {
 		application.getGame().getAnimation().getKeyFrames().add(frame);
 		application.getGame().getAnimation().setCycleCount(Timeline.INDEFINITE);
 		
-		root.getChildren().addAll(food, snakeBody);
+		root.getChildren().addAll(food, snakeBody, application.getScoreLabel());
 	}
 
 	/**
@@ -133,6 +133,8 @@ public class Display {
 					tail.getTranslateY() == node.getTranslateY()) {
 				//the snake hits its own body
 				application.restartGame(application.getGame());
+				
+				application.getScoreLabel().setText("Score: " + application.getGame().getScore());
 				break;
 			}
 		}
@@ -147,6 +149,8 @@ public class Display {
 		if (tail.getTranslateX() < 0 || tail.getTranslateX() >= GameUtils.WIDTH ||
 				tail.getTranslateY() < 0 || tail.getTranslateY() >= GameUtils.HEIGHT) {
 			application.restartGame(application.getGame());
+			
+			application.getScoreLabel().setText("Score: " + application.getGame().getScore());
 		}
 	}
 
@@ -167,6 +171,10 @@ public class Display {
 			rectangle.setFill(new ImagePattern(new Image(this.getClass().getResource("../resources/snake_block.png").toExternalForm())));
 			rectangle.setTranslateX(tailX);
 			rectangle.setTranslateY(tailY);
+			
+			//increase score
+			application.getGame().setScore(application.getGame().getScore() + GameUtils.SCORE_STEP);
+			application.getScoreLabel().setText("Score: " + application.getGame().getScore());
 			
 			application.getGame().getSnake().add(rectangle);
 		}

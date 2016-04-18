@@ -35,7 +35,11 @@ public class Game {
      * <{@link ObservableList<Node>}> object.
      */
     private ObservableList<Node> snake;
-
+    /**
+     * Shows the score of the game.
+     */
+    private int score;
+    
 	/**
      * Default constructor. Sets default values.
      */
@@ -45,6 +49,7 @@ public class Game {
         this.isApplicationRunning = false;
         this.animation = new Timeline();
         this.isGamePaused = false;
+        this.score = 0;
     }
 
     public Direction getDirection() {
@@ -100,5 +105,13 @@ public class Game {
         isGamePaused = false;
         this.animation.play();
     }
-    
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+	
 }

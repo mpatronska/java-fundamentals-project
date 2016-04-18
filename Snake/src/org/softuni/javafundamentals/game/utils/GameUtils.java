@@ -26,4 +26,8 @@ public class GameUtils {
 	 * Defines the height
 	 */
 	public static final int HEIGHT = 20 * BLOCK_SIZE;
+	/**
+	 * Defines the score step
+	 */
+	public static final int SCORE_STEP = 10;
 }
