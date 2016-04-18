@@ -29,6 +29,7 @@ public class SnakeApplication extends Application {
     private Game game;
     
     private Label scoreLabel = new Label("Score: 0");
+    private Label pauseLabel = new Label("Game paused. Press any key to resume.");
 
 	public SnakeApplication() {
         this.game = new Game();
@@ -94,7 +95,7 @@ public class SnakeApplication extends Application {
 
             // check if gamestate is paused - resuming game by press any key
             if (game.isGamePaused()) {
-                System.out.println("Game resumed");
+                ((Pane)scene.getRoot()).getChildren().remove(this.pauseLabel);
                 game.resumeGame();
             }
 
@@ -126,7 +127,7 @@ public class SnakeApplication extends Application {
 
                 // pause game - if pressed key 'P'
                 case P:
-                    pauseGame(game);
+                    pauseGame(game, scene);
                     handleKeyEvent(game, scene);
                     break;
 
@@ -258,11 +259,14 @@ public class SnakeApplication extends Application {
      * 
      * @param game
      */
-    private void pauseGame(Game game) {
+    private void pauseGame(Game game, Scene scene) {
         if (!game.isGamePaused()) {
             game.pauseGame();
-            // text on screen to pause needed - TODO
-            System.out.println("Game paused");
+            
+            this.pauseLabel.setTranslateX(GameUtils.WIDTH / 2);
+            this.pauseLabel.setTranslateY(60);
+            
+            ((Pane)scene.getRoot()).getChildren().add(this.pauseLabel);
         }
     }
 
@@ -287,4 +291,8 @@ public class SnakeApplication extends Application {
     public Label getScoreLabel() {
   		return scoreLabel;
   	}
+    
+    public Label getPauseLabel() {
+		return pauseLabel;
+	}
 }
