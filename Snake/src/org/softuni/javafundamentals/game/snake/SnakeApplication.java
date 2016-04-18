@@ -63,6 +63,7 @@ public class SnakeApplication extends Application {
             primaryStage.setTitle("Snake");
 
             primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
             primaryStage.show();
 
             startGame(game);
