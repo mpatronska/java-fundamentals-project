@@ -95,12 +95,21 @@ public class Display {
 			
 			//collision detection
 			detectCollision(food, tail, tailX, tailY);
+			
+			//increase level
+			if (application.getGame().getScore() >= GameUtils.LEVEL_STEP) {
+				application.getGame().setLevel(application.getGame().getLevel() + 1);
+				application.getLevelLabel().setText("Level: " + application.getGame().getLevel());
+				
+				application.getGame().setScore(0);
+				application.getScoreLabel().setText("Score: " + application.getGame().getScore());
+			}
 		});
 		
 		application.getGame().getAnimation().getKeyFrames().add(frame);
 		application.getGame().getAnimation().setCycleCount(Timeline.INDEFINITE);
 		
-		root.getChildren().addAll(food, snakeBody, application.getScoreLabel());
+		root.getChildren().addAll(food, snakeBody, application.getScoreLabel(), application.getLevelLabel());
 	}
 
 	/**

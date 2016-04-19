@@ -39,6 +39,10 @@ public class Game {
      * Shows the score of the game.
      */
     private int score;
+    /**
+     * Shows the level of the game.
+     */
+    private int level;
     
 	/**
      * Default constructor. Sets default values.
@@ -112,6 +116,14 @@ public class Game {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+	
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 	
 }

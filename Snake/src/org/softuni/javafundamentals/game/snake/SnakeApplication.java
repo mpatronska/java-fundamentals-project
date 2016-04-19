@@ -29,10 +29,12 @@ public class SnakeApplication extends Application {
     private Game game;
     
     private Label scoreLabel = new Label("Score: 0");
-    private Label pauseLabel = new Label("Game paused. Press any key to resume.");
+    private Label levelLabel = new Label("Level: 1");
+	private Label pauseLabel = new Label("Game paused. Press any key to resume.");
 
 	public SnakeApplication() {
         this.game = new Game();
+        this.levelLabel.setTranslateY(20);
     }
 
     /**
@@ -168,7 +170,7 @@ public class SnakeApplication extends Application {
 		        if (ke.getCode().equals(KeyCode.ENTER)) {
 		        	
 		            String name = textField.getText();
-		            endGameLabel.setText("Thank you, " + name + ". Your score is: " + game.getScore() + ".");
+		            endGameLabel.setText("Thank you, " + name + ". Your score is: " + calculateTotalScore() + ".");
 		            ((Pane)scene.getRoot()).getChildren().add(endGameLabel);
 		            
 		            Button newGameButton = new Button("New game");
@@ -187,6 +189,7 @@ public class SnakeApplication extends Application {
 						public void handle(MouseEvent paramT) {
 							restartGame(game);
 							scoreLabel.setText("Score: " + game.getScore());
+							levelLabel.setText("Level: " + game.getLevel());
 							((Pane)scene.getRoot()).getChildren().removeAll(hb, endGameLabel, newGameButton, exitButton);
 						}
 					});
@@ -227,8 +230,8 @@ public class SnakeApplication extends Application {
         game.getSnake().add(head);
         game.getAnimation().play();
         game.setApplicationRunning(true);
-        game.setScore(0);       
-        
+        game.setScore(0);   
+        game.setLevel(1);
     }
 
     /**
@@ -280,6 +283,24 @@ public class SnakeApplication extends Application {
          game.getAnimation().stop();
     }
     
+    /**
+     * Calculates the total score.
+     */
+    private int calculateTotalScore() {
+    	if (game.getLevel() == 1) {
+    		System.out.println(game.getLevel() + ", " + game.getScore());
+			return game.getScore();
+		} else {
+			if (game.getScore() == 0) {
+				System.out.println(game.getLevel() + ", " + game.getScore());
+				return (game.getLevel() - 1) * GameUtils.LEVEL_STEP;
+			} else {
+				System.out.println(game.getLevel() + ", " + game.getScore());
+				return (game.getLevel() - 1) * GameUtils.LEVEL_STEP + game.getScore();
+			}
+		}
+    }
+    
     public Game getGame() {
         return game;
     }
@@ -291,6 +312,10 @@ public class SnakeApplication extends Application {
     public Label getScoreLabel() {
   		return scoreLabel;
   	}
+
+    public Label getLevelLabel() {
+		return levelLabel;
+	}
     
     public Label getPauseLabel() {
 		return pauseLabel;

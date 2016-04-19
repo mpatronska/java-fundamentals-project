@@ -30,4 +30,8 @@ public class GameUtils {
 	 * Defines the score step
 	 */
 	public static final int SCORE_STEP = 10;
+	/**
+	 * Defines the level step
+	 */
+	public static final int LEVEL_STEP = 50;
 }
