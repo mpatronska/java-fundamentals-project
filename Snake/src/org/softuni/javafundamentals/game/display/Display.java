@@ -144,6 +144,7 @@ public class Display {
 				application.restartGame(application.getGame());
 				
 				application.getScoreLabel().setText("Score: " + application.getGame().getScore());
+				application.getLevelLabel().setText("Level: " + application.getGame().getLevel());
 				break;
 			}
 		}
@@ -160,6 +161,7 @@ public class Display {
 			application.restartGame(application.getGame());
 			
 			application.getScoreLabel().setText("Score: " + application.getGame().getScore());
+			application.getLevelLabel().setText("Level: " + application.getGame().getLevel());
 		}
 	}
 
