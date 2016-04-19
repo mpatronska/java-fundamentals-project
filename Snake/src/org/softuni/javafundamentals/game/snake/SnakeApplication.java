@@ -155,12 +155,12 @@ public class SnakeApplication extends Application {
 		HBox hb = new HBox();
 		hb.getChildren().addAll(nameLabel, textField);
 		hb.setSpacing(10);
-		hb.setTranslateX(GameUtils.WIDTH / 2);
+		hb.setTranslateX(GameUtils.WIDTH / 2 - 50);
 		hb.setTranslateY(20);
 		
 		Label endGameLabel = new Label();
 		endGameLabel.setTranslateX(GameUtils.WIDTH / 2);
-		endGameLabel.setTranslateY(60);
+		endGameLabel.setTranslateY(80);
 		
 		textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
 		    @Override
@@ -173,11 +173,11 @@ public class SnakeApplication extends Application {
 		            
 		            Button newGameButton = new Button("New game");
 		            newGameButton.setTranslateX(GameUtils.WIDTH / 2);
-		            newGameButton.setTranslateY(100);
+		            newGameButton.setTranslateY(120);
 		            
 		            Button exitButton = new Button("Exit");
 		            exitButton.setTranslateX(GameUtils.WIDTH / 2 + 150);
-		            exitButton.setTranslateY(100);
+		            exitButton.setTranslateY(120);
 		            
 		            ((Pane)scene.getRoot()).getChildren().addAll(newGameButton, exitButton);
 		            
