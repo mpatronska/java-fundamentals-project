@@ -141,10 +141,8 @@ public class Display {
 			if (node != tail && tail.getTranslateX() == node.getTranslateX() &&
 					tail.getTranslateY() == node.getTranslateY()) {
 				//the snake hits its own body
-				application.restartGame(application.getGame());
-				
-				application.getScoreLabel().setText("Score: " + application.getGame().getScore());
-				application.getLevelLabel().setText("Level: " + application.getGame().getLevel());
+				application.handleGameOver(application.getGame(), application.getScene());
+				application.escapeGame(application.getGame());
 				break;
 			}
 		}
@@ -158,10 +156,9 @@ public class Display {
 	private void checkIfSnakeHitsBorderArea(Node tail) {
 		if (tail.getTranslateX() < 0 || tail.getTranslateX() >= GameUtils.WIDTH ||
 				tail.getTranslateY() < 0 || tail.getTranslateY() >= GameUtils.HEIGHT) {
-			application.restartGame(application.getGame());
 			
-			application.getScoreLabel().setText("Score: " + application.getGame().getScore());
-			application.getLevelLabel().setText("Level: " + application.getGame().getLevel());
+			application.handleGameOver(application.getGame(), application.getScene());
+			application.escapeGame(application.getGame());
 		}
 	}
 

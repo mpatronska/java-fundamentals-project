@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 public class SnakeApplication extends Application {
 
     private Game game;
+    private Scene scene;
     
     private Label scoreLabel = new Label("Score: 0");
     private Label levelLabel = new Label("Level: 1");
@@ -55,7 +56,7 @@ public class SnakeApplication extends Application {
 
             Pane root = new Display(this).createContent();
             root.setId("pane");
-            Scene scene = new Scene(root);
+            scene = new Scene(root);
 
             scene.getStylesheets().addAll(this.getClass().getResource("../resources/style.css").toExternalForm());
             //String imageBG = "../resources/snake.png";
@@ -76,7 +77,7 @@ public class SnakeApplication extends Application {
 
     }
 
-    /**
+	/**
      * Handles key event:
      * <p>
      * <ul>
@@ -150,7 +151,7 @@ public class SnakeApplication extends Application {
      * @param game
      * @param scene
      */
-	private void handleEscape(Game game, Scene scene) {
+	public void handleEscape(Game game, Scene scene) {
 		Label nameLabel = new Label("Please enter your name:");
 		TextField textField = new TextField ();
 		
@@ -207,7 +208,72 @@ public class SnakeApplication extends Application {
 		
 		((Pane)scene.getRoot()).getChildren().add(hb);
 	}
+	
+	/**
+	 * Handles game over.
+	 * 
+	 * @param game
+	 * @param scene
+	 */
+	public void handleGameOver(Game game, Scene scene) {
+		Label gameOverLabel = new Label("Game over.");
+		gameOverLabel.setTranslateX(GameUtils.WIDTH / 2 - 50);
+		Label nameLabel = new Label("Please enter your name:");
+		TextField textField = new TextField ();
+		
+		HBox hb = new HBox();
+		hb.getChildren().addAll(nameLabel, textField);
+		hb.setSpacing(10);
+		hb.setTranslateX(GameUtils.WIDTH / 2 - 50);
+		hb.setTranslateY(20);
+		
+		Label endGameLabel = new Label();
+		endGameLabel.setTranslateX(GameUtils.WIDTH / 2);
+		endGameLabel.setTranslateY(80);
+		
+		textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		    @Override
+		    public void handle(KeyEvent ke) {
+		        if (ke.getCode().equals(KeyCode.ENTER)) {
+		        	
+		            String name = textField.getText();
+		            endGameLabel.setText("Thank you, " + name + ". Your score is: " + calculateTotalScore() + ".");
+		            ((Pane)scene.getRoot()).getChildren().add(endGameLabel);
+		            
+		            Button newGameButton = new Button("New game");
+		            newGameButton.setTranslateX(GameUtils.WIDTH / 2);
+		            newGameButton.setTranslateY(120);
+		            
+		            Button exitButton = new Button("Exit");
+		            exitButton.setTranslateX(GameUtils.WIDTH / 2 + 150);
+		            exitButton.setTranslateY(120);
+		            
+		            ((Pane)scene.getRoot()).getChildren().addAll(newGameButton, exitButton);
+		            
+		            newGameButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
+						@Override
+						public void handle(MouseEvent paramT) {
+							restartGame(game);
+							scoreLabel.setText("Score: " + game.getScore());
+							levelLabel.setText("Level: " + game.getLevel());
+							((Pane)scene.getRoot()).getChildren().removeAll(hb, gameOverLabel, endGameLabel, newGameButton, exitButton);
+						}
+					});
+		            
+		            exitButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+						@Override
+						public void handle(MouseEvent paramT) {
+							endGame(game);
+						}
+					});
+		        }
+		    }
+		});
+		
+		((Pane)scene.getRoot()).getChildren().addAll(hb, gameOverLabel);
+	}
     /**
      * Restarts the game.
      *
@@ -278,7 +344,7 @@ public class SnakeApplication extends Application {
      * 
      * @param game
      */
-    private void escapeGame(Game game) {
+    public void escapeGame(Game game) {
     	 game.setApplicationRunning(false);
          game.getAnimation().stop();
     }
@@ -288,14 +354,11 @@ public class SnakeApplication extends Application {
      */
     private int calculateTotalScore() {
     	if (game.getLevel() == 1) {
-    		System.out.println(game.getLevel() + ", " + game.getScore());
 			return game.getScore();
 		} else {
 			if (game.getScore() == 0) {
-				System.out.println(game.getLevel() + ", " + game.getScore());
 				return (game.getLevel() - 1) * GameUtils.LEVEL_STEP;
 			} else {
-				System.out.println(game.getLevel() + ", " + game.getScore());
 				return (game.getLevel() - 1) * GameUtils.LEVEL_STEP + game.getScore();
 			}
 		}
@@ -308,6 +371,10 @@ public class SnakeApplication extends Application {
     public void setGame(Game game) {
         this.game = game;
     }
+    
+    public Scene getScene() {
+  		return scene;
+  	}
 
     public Label getScoreLabel() {
   		return scoreLabel;
